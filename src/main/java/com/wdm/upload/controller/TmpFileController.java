@@ -3,13 +3,14 @@ package com.wdm.upload.controller;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.wdm.upload.util.FileUploadUtil;
+import com.wdm.upload.util.OcrFileUploadUtil;
 
 @RestController
 @RequestMapping("/tmp")
@@ -22,7 +23,12 @@ public class TmpFileController {
         }
         Map<String, String> textMap = new HashMap<>();
         textMap.put("word", "tmp");
-        FileUploadUtil.formUpload("http://localhost:8080/file/upload", textMap, file);
-        return "上传成功";
+        textMap.put("appid", "1251633352");
+        textMap.put("bucket", "gishowci");
+        textMap.put("card_type", "0");
+        String result = OcrFileUploadUtil.formUpload("http://service.image.myqcloud.com/ocr/idcard", textMap, file);
+        System.out.println(result);
+        System.out.println(StringUtils.deleteWhitespace(result));
+        return result;
     }
 }

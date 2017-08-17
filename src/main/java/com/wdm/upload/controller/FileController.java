@@ -3,6 +3,8 @@ package com.wdm.upload.controller;
 import java.io.File;
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +29,7 @@ public class FileController {
         String suffixName = fileName.substring(fileName.lastIndexOf("."));
         System.out.println("上传的后缀名为：" + suffixName);
         // 文件上传后的路径
-        String filePath = "E://picture//";
+        String filePath = "/Users/duanyong/Documents/picture/";//"E://picture//";
         File dest = new File(filePath + fileName);
         // 检测是否存在目录
         if (!dest.getParentFile().exists()) {
@@ -42,5 +44,14 @@ public class FileController {
             e.printStackTrace();
         }
         return "上传失败";
+    }
+
+    @RequestMapping(value = "/show", method = RequestMethod.POST)
+    public void show(
+            @RequestParam("file") MultipartFile file,
+            HttpServletResponse response) throws IOException {
+        response.setHeader("Content-Type","image/jpeg");//设置响应的媒体类型，这样浏览器会识别出响应的是图片
+        response.getOutputStream().write(file.getBytes());
+        response.flushBuffer();
     }
 }
